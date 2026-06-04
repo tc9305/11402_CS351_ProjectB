@@ -22,7 +22,7 @@ jobs:
 
       - name: Run smoke test
         run: |
-          output=$(./csv_db <<'EOF'
+          cat > test_commands.txt << 'EOF'
           LOAD data/students.csv
           SELECT *
           SELECT * WHERE name = 'Alice'
@@ -31,10 +31,10 @@ jobs:
           SELECT * WHERE id = 99
           EXIT
           EOF
-          )
 
-          echo "$output"
+          ./csv_db < test_commands.txt > output.txt
+          cat output.txt
 
-          echo "$output" | grep -q "Alice"
-          echo "$output" | grep -q "TestUser"
-          echo "$output" | grep -q "row(s) returned"
+          grep -q "Alice" output.txt
+          grep -q "TestUser" output.txt
+          grep -q "row(s) returned" output.txt
